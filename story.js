@@ -85,7 +85,7 @@
         go.disabled = false; status.className = 'pstatus bad'; status.textContent = (err && err.message) || String(err);
       });
     } }, [input, go]);
-    var kids = [h('div', { class: 'brand', text: 'Profile growth review' }), GrowthHost.canLookup() ? form : h('span', { class: 'pstatus', text: GrowthHost.snapshotLabel() + (state.profile ? ' of ' + state.profile : '') + '.' })];
+    var kids = [h('div', { class: 'brand', text: 'Profile growth review' }), form, state.source === 'profile' ? null : h('span', { class: 'pstatus', text: GrowthHost.snapshotLabel() + (state.profile ? ' of ' + state.profile : '') + '.' })];
     if (state.source === 'profile') { kids.push(h('button', { class: 'upbtn', type: 'button', text: 'Back to saved data', onclick: function () { state.source = 'workbook'; load(true).catch(function (e) { showMessage('Data error: ' + (e && e.message || e)); }); } })); }
     kids.push(status);
     return h('header', { class: 'topbar' }, kids);

@@ -71,7 +71,6 @@
   }
 
   var cfg = window.GROWTH_CONFIG || {};
-  var IS_LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 
   window.GrowthHost = {
     // The page is self-contained: it reads data.csv unless it is running inside Tableau as an extension
@@ -91,14 +90,14 @@
       return Promise.resolve(mode);
     },
     load: function () { return mode === 'tableau' ? fromTableau() : fromCsv(); },
-    // Profile lookup needs a backend (the browser cannot call Tableau Public directly): the local review
-    // server, or a hosted function whose address is set in config.js. A static host has neither.
-    canLookup: function () { return !!cfg.profileApi || IS_LOCAL; },
+    // Profile lookup needs a backend because the browser cannot call Tableau Public directly. It is tried
+    // at /api/profile on the same host; config.js profileApi only overrides that when the page and the
+    // function live on different hosts (for example GitHub Pages plus Vercel).
     snapshotLabel: function () { return cfg.snapshot ? 'Saved snapshot from ' + cfg.snapshot : 'Saved snapshot'; },
     loadProfile: function (name) {
       var base = cfg.profileApi ? cfg.profileApi.replace(/\/$/, '') + '/' : '';
       return fetch(base + 'api/profile?name=' + encodeURIComponent(name)).then(function (r) {
-        return r.json().catch(function () { throw new Error('Profile lookup is not available on this host.'); }).then(function (j) {
+        return r.json().catch(function () { throw new Error('Profile lookup is not available on this host. It needs the /api/profile function (see README).'); }).then(function (j) {
           if (!r.ok || !j.rows) { throw new Error(j.error || 'Lookup failed (' + r.status + ')'); }
           return j.rows;
         });
