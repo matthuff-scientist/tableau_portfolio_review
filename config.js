@@ -5,6 +5,6 @@
 //               static host such as GitHub Pages; the page then shows the saved snapshot in data.csv.
 //   snapshot:   the date data.csv was fetched, shown to readers.
 window.GROWTH_CONFIG = {
-  profileApi: '<https://<your-address>',
+  profileApi: 'https://portfolioreview-sigma.vercel.app/',
   snapshot: '2026-11-12'
 };
